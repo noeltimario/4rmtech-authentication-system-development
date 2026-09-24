@@ -1,7 +1,9 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { ArrowRight, Check, ChevronDown, Menu, Minus, Plus, Search, ShoppingBag, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { ArrowRight, Check, ChevronDown, LogOut, Menu, Minus, Plus, Search, ShoppingBag, X } from 'lucide-react'
+import { authClient } from '@/lib/auth-client'
 
 const logoUrl = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-NLV1vD6RkAzBACD587Bh8jYDExGFCf.png'
 
@@ -22,6 +24,7 @@ const categories = ['All', 'Gaming Gear', 'Mobile Tech', 'Computers', 'Smart Dev
 const peso = (value: number) => `₱${value.toLocaleString('en-PH')}`
 
 export default function Storefront() {
+  const router = useRouter()
   const [cart, setCart] = useState<Record<string, number>>({})
   const [category, setCategory] = useState('All')
   const [query, setQuery] = useState('')
@@ -50,7 +53,7 @@ export default function Storefront() {
       <a href="#home" className="store-brand"><img src={logoUrl} alt="4RMTECH Gadgets Shop" /></a>
       <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">{menuOpen ? <X /> : <Menu />}</button>
       <nav className={menuOpen ? 'store-links open' : 'store-links'}><a href="#home">Home</a><a href="#products">Products <ChevronDown /></a><a href="#categories">Categories <ChevronDown /></a><a href="#services">Services</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
-      <div className="store-actions"><label className="store-search"><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search products" /></label><button className="cart-trigger" onClick={() => setCartOpen(true)}><ShoppingBag /> Cart <b>{itemCount}</b></button></div>
+      <div className="store-actions"><label className="store-search"><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search products" /></label><button className="cart-trigger" onClick={() => setCartOpen(true)}><ShoppingBag /> Cart <b>{itemCount}</b></button><button className="buyer-logout" onClick={async () => { await authClient.signOut(); router.push('/login') }}><LogOut /> <span>Logout</span></button></div>
     </header>
 
     <main>
